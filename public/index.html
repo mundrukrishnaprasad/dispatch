@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dispatch — The day's news, read closely</title>
+    <meta
+      name="description"
+      content="Dispatch is a newsroom desk that reads the current edition and answers your questions, with every claim traced to its source."
+    />
+    <meta name="theme-color" content="#F4EFE4" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#desk">Skip to the desk</a>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="masthead">
+      <div class="masthead__bar">
+        <span>Independent · Est. 2026</span>
+        <span class="masthead__note">An experimental newsroom desk</span>
+        <time id="today">Monday, 9 November 2026</time>
+      </div>
+
+      <div class="masthead__wordmark">
+        <span class="masthead__rule" aria-hidden="true"></span>
+        <h1>Dispatch<span aria-hidden="true">.</span></h1>
+        <span class="masthead__rule" aria-hidden="true"></span>
+      </div>
+
+      <p class="masthead__tagline">The day's reporting, read closely. Ask it anything.</p>
+
+      <nav class="masthead__nav" aria-label="Sections">
+        <div class="nav__links">
+          <a href="#desk">The Desk</a>
+          <a href="#edition">Today's Edition</a>
+          <a href="#method">Method</a>
+        </div>
+        <p class="nav__status">
+          <span class="status__mark" aria-hidden="true"></span>
+          <span id="edition-status">Reading the wires</span>
+        </p>
+      </nav>
+    </header>
+
+    <main>
+      <section class="lede" aria-labelledby="lede-title">
+        <div class="lede__copy">
+          <p class="kicker">The Brief</p>
+          <h2 id="lede-title">A quieter way to<br /><em>read the news.</em></h2>
+        </div>
+        <div class="lede__aside">
+          <p>
+            Dispatch reads the current edition — world, politics, business, technology — and
+            answers in plain language. Every claim is tied to the story it came from.
+          </p>
+        </div>
+      </section>
+
+      <div class="layout">
+        <section class="desk" id="desk" aria-labelledby="desk-title">
+          <header class="desk__head">
+            <div>
+              <p class="kicker">Ask the desk</p>
+              <h2 id="desk-title">What would you like to know?</h2>
+            </div>
+            <button class="link-button" id="clear" type="button">Clear conversation</button>
+          </header>
+
+          <div class="thread" id="thread">
+            <article class="turn turn--desk" id="intro">
+              <div class="turn__meta">
+                <span class="turn__who">The Desk</span>
+                <span class="turn__time">Now</span>
+              </div>
+              <div class="turn__body">
+                <p>
+                  Good morning. I have read today's edition and I am ready to take your questions.
+                  Ask about a headline, a region, a company, or a theme — I will answer from the
+                  reporting and show you where it came from.
+                </p>
+              </div>
+            </article>
+
+            <div class="suggestions" id="suggestions">
+              <p class="suggestions__label">Try one of these</p>
+              <button type="button" data-question="What are the most important stories in today's edition?">
+                The most important stories of the day
+              </button>
+              <button type="button" data-question="What is happening in technology right now?">
+                What is happening in technology?
+              </button>
+              <button type="button" data-question="Which stories touch on climate and the environment?">
+                Which stories touch on climate?
+              </button>
+            </div>
+          </div>
+
+          <form class="composer" id="composer">
+            <label class="sr-only" for="input">Your question</label>
+            <textarea
+              id="input"
+              rows="1"
+              maxlength="800"
+              placeholder="Ask about today's news…"
+              autocomplete="off"
+            ></textarea>
+            <div class="composer__foot">
+              <span class="composer__hint">Enter to send · Shift + Enter for a new line</span>
+              <button type="submit" class="send" id="send">
+                Ask the desk <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </form>
+
+          <p class="fineprint">
+            Answers are generated from the current RSS edition and may be incomplete. Reporting
+            belongs to its publishers. <a href="#method">How this works</a>.
+          </p>
+
+          <section class="edition-note" aria-label="About this edition">
+            <p class="kicker">The edition</p>
+            <div class="edition-note__stats">
+              <div>
+                <span class="edition-note__value" id="note-stories">—</span>
+                <span class="edition-note__label">Stories</span>
+              </div>
+              <div>
+                <span class="edition-note__value" id="note-publishers">—</span>
+                <span class="edition-note__label">Publishers</span>
+              </div>
+              <div>
+                <span class="edition-note__value" id="note-passages">—</span>
+                <span class="edition-note__label">Passages</span>
+              </div>
+            </div>
+            <p class="edition-note__copy">
+              Compiled from public feeds. The desk does not browse the open web, and it will tell
+              you when the reporting stops short.
+            </p>
+          </section>
+
+          <p class="sr-only" id="live" aria-live="polite"></p>
+        </section>
+
+        <aside class="rail" id="edition" aria-labelledby="rail-title">
+          <header class="rail__head">
+            <p class="kicker">Today's Edition</p>
+            <h2 id="rail-title">The front page</h2>
+            <p class="rail__count" id="rail-count">Reading the wires…</p>
+          </header>
+          <ol class="stories" id="stories"></ol>
+          <footer class="rail__foot">
+            <p>Compiled from public RSS feeds. <span id="updated">—</span></p>
+          </footer>
+        </aside>
+      </div>
+
+      <section class="method" id="method" aria-labelledby="method-title">
+        <header class="method__head">
+          <p class="kicker">Method</p>
+          <h2 id="method-title">How the desk reads the day.</h2>
+        </header>
+
+        <div class="method__grid">
+          <article>
+            <span class="method__number">01</span>
+            <h3>Collect</h3>
+            <p>
+              Every four hours the desk pulls the latest reporting from public RSS and Atom feeds,
+              and reads the reporting in each entry, not just the headline.
+            </p>
+          </article>
+          <article>
+            <span class="method__number">02</span>
+            <h3>Retrieve</h3>
+            <p>
+              Your question is matched against passages from this edition using vector search. The
+              model sees the reporting, not a general memory of the world.
+            </p>
+          </article>
+          <article>
+            <span class="method__number">03</span>
+            <h3>Answer</h3>
+            <p>
+              The reply is written from those passages and cites each source by number. If the
+              edition does not cover something, the desk says so.
+            </p>
+          </article>
+        </div>
+
+        <div class="colophon">
+          <p>
+            Built with Cloudflare Workers, Workers AI, Vectorize and D1. No accounts, no tracking,
+            no advertising.
+          </p>
+          <p>
+            <a href="https://github.com/mundrukrishnaprasad/dispatch">Source code</a>
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-foot">
+      <p>Dispatch · An independent experiment in reading the news</p>
+      <p>Reporting © its publishers</p>
+    </footer>
+  </body>
+</html>

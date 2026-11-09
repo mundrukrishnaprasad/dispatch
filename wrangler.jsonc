@@ -1,0 +1,36 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dispatch",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "observability": {
+    "enabled": true
+  },
+  "ai": {
+    "binding": "AI"
+  },
+  "vectorize": [
+    {
+      "binding": "VECTORIZE",
+      "index_name": "dispatch-news"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "dispatch",
+      "database_id": "82e48802-2db5-4e6b-99c8-705238a0d6a5"
+    }
+  ],
+  "triggers": {
+    "crons": ["17 */4 * * *"]
+  },
+  "vars": {
+    "SITE_URL": "https://dispatch.kp489292.workers.dev"
+  }
+}
