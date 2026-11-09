@@ -280,12 +280,7 @@ async function send(text) {
     turn.paragraph.style.whiteSpace = "";
 
     if (answer.trim()) {
-      const clean = answer
-        .trim()
-        .replace(/\[(\d{1,2})\]/g, (match, value) => {
-          const number = Number(value);
-          return number >= 1 && number <= sources.length ? match : "";
-        });
+      const clean = normalizeCitations(answer.trim(), sources.length);
 
       const cited = new Set(
         Array.from(clean.matchAll(/\[(\d{1,2})\]/g)).map((match) => Number(match[1]))
@@ -357,6 +352,23 @@ async function readEvents(stream, onEvent) {
 }
 
 /* ------------------------------------------------------------- display */
+
+function normalizeCitations(text, max) {
+  return text
+    .replace(/\[\s*\]/g, "")
+    .replace(/\[(\s*\d{1,2}\s*(?:[,;]\s*\d{1,2}\s*)+)\]/g, (_, group) =>
+      group
+        .split(/[,;]/)
+        .map((value) => `[${value.trim()}]`)
+        .join("")
+    )
+    .replace(/\[(\d{1,2})\]/g, (match, value) => {
+      const number = Number(value);
+      return number >= 1 && number <= max ? match : "";
+    })
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/\s+([.,;:!?])/g, "$1");
+}
 
 function formatAnswer(text, messageId) {
   return text
